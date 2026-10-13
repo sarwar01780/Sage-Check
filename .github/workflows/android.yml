@@ -26,6 +26,14 @@ jobs:
       - name: Accept Android SDK licenses (the SDK is already installed on the runner)
         run: yes | "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" --licenses > /dev/null || true
 
+      - name: Write app settings (optional links from repository variables)
+        working-directory: saboteur-app
+        env:
+          SAVE_URL: ${{ vars.SAVE_URL }}
+          CHAT_URL: ${{ vars.CHAT_URL }}
+        run: |
+          printf 'window.PI_CONFIG = { SAVE_URL: "%s", CHAT_URL: "%s" };\n' "$SAVE_URL" "$CHAT_URL" > www/config.js
+
       - name: Install dependencies
         working-directory: saboteur-app
         run: npm ci
